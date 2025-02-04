@@ -1,70 +1,62 @@
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
+    id("dev.flutter.flutter-gradle-plugin")
+}
+
+import java.util.Properties
+
 def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
+def localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
+    localPropertiesFile.withReader("UTF-8") { reader ->
         localProperties.load(reader)
     }
 }
 
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-}
-
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
-
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
-
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'com.google.gms.google-services'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+def flutterVersionCode = localProperties.getProperty("flutter.versionCode")?.toInteger() ?: 1
+def flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "1.0"
 
 android {
-    compileSdkVersion flutter.compileSdkVersion
+    namespace "com.example.tiktok_tutorial"
+    compileSdkVersion(34) // Use a recent compileSdkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = "1.8"
     }
 
     sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+        getByName("main").java.srcDirs("src/main/kotlin")
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.tiktok_tutorial"
-        minSdkVersion 19
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
-        multiDexEnabled true
+        applicationId = "com.example.tiktok_tutorial"
+        minSdkVersion(21) // Use a recent minSdkVersion
+        targetSdkVersion(34) // Use a recent targetSdkVersion
+        versionCode = flutterVersionCode
+        versionName = flutterVersionName
+        multiDexEnabled = true
     }
 
     buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
+        getByName("release") {// TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = false
         }
     }
 }
 
 flutter {
-    source '../..'
+    source = "../.."
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7")
 }
